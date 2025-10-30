@@ -6,32 +6,22 @@ import java.util.*;
 public class Grid {
     private final int width;
     private final int height;
-    private long seed;
+    private final long seed;
     private final List<Tile> tiles = new ArrayList<>();
 
-    public Grid(int size){
-        this.width = size;
-        this.height = size;
-        this.seed = new Random().nextLong();
+    public Grid(int size) {
+        this(size, size, new Random().nextLong());
     }
 
-    public Grid(int width, int height){
-        this.width = width;
-        this.height = height;
-        this.seed = new Random().nextLong();
+    public Grid(int width, int height) {
+        this(width, height, new Random().nextLong());
     }
 
-    // för tests
-    public Grid(int size, long seed){
-        this.width = size;
-        this.height = size;
-        this.seed = seed;
-    }
-
-    public Grid(int width, int height, long seed){
+    public Grid(int width, int height, long seed) {
         this.width = width;
         this.height = height;
         this.seed = seed;
+        createTiles();
     }
 
     private void createTiles(){
@@ -56,7 +46,7 @@ public class Grid {
     }
 
     public List<Tile> getTiles(){
-        return tiles;
+        return new ArrayList<>(tiles); //kopia för avläsning
     }
 
     public Tile findTileByValue(int value){
@@ -66,5 +56,16 @@ public class Grid {
             }
         }
         return null;
+    }
+
+    // den tomma rutan (tile med värde 0) är antingen 1 ifrån i x- eller y-led
+    public boolean canMoveTile(int value){
+        Tile moveTile = findTileByValue(value);
+        Tile emptyTile = findTileByValue(0);
+
+        int distanceX = Math.abs(moveTile.getX() - emptyTile.getX());
+        int distanceY = Math.abs(moveTile.getY() - emptyTile.getY());
+
+        return distanceX == 1 || distanceY == 1;
     }
 }
