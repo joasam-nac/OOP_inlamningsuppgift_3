@@ -13,11 +13,11 @@ public class Tile {
     }
 
     public int getY(){
-        return position[0];
+        return position[1];
     }
 
     public int getX(){
-        return position[1];
+        return position[0];
     }
 
     public void setY(int y){

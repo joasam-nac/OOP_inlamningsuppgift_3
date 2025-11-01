@@ -47,4 +47,36 @@ public class GridTest {
         assertNotNull(movable, "There should be a movable tile touching empty place in grid");
         assertTrue(grid.canMoveTile(movable.getValue()), "Tile near empty place should be movable");
     }
+
+    @Test
+    public void testSwitchPosition(){
+        long seed = 12345L;
+        Grid grid = new Grid(4,4,seed);
+
+        Tile empty = grid.findTileByValue(0);
+        Tile movable = null;
+
+
+        for (Tile t : grid.getTiles()) {
+            if (t.getValue() != 0 && grid.canMoveTile(t.getValue())) {
+                movable = t;
+                break;
+            }
+        }
+
+        assertNotNull(movable, "There should be at least one tile that can move.");
+
+        // initiella platser
+        int emptyXBefore = empty.getX();
+        int emptyYBefore = empty.getY();
+        int movableXBefore = movable.getX();
+        int movableYBefore = movable.getY();
+
+        grid.moveTile(movable.getValue());
+
+        assertEquals(emptyXBefore, movable.getX(), "Movable tile X should swap with empty tile X");
+        assertEquals(emptyYBefore, movable.getY(), "Movable tile Y should swap with empty tile Y");
+        assertEquals(movableXBefore, empty.getX(), "Empty tile X should swap with movable tile X");
+        assertEquals(movableYBefore, empty.getY(), "Empty tile Y should swap with movable tile Y");
+    }
 }

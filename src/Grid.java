@@ -66,6 +66,22 @@ public class Grid {
         int distanceX = Math.abs(moveTile.getX() - emptyTile.getX());
         int distanceY = Math.abs(moveTile.getY() - emptyTile.getY());
 
-        return distanceX == 1 || distanceY == 1;
+        return (distanceX == 1 && distanceY == 0) || (distanceY == 1 && distanceX == 0);
+    }
+
+    public void moveTile(int value){
+        if (canMoveTile(value)){
+            Tile moveTile = findTileByValue(value);
+            Tile emptyTile = findTileByValue(0);
+
+            int tempX = moveTile.getX();
+            int tempY = moveTile.getY();
+
+            moveTile.setX(emptyTile.getX());
+            moveTile.setY(emptyTile.getY());
+
+            emptyTile.setX(tempX);
+            emptyTile.setY(tempY);
+        }
     }
 }
