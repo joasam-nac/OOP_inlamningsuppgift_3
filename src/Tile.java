@@ -28,6 +28,11 @@ public class Tile {
         position[0] = x;
     }
 
+    public void setPosition(int x, int y){
+        this.position[0] = x;
+        this.position[1] = y;
+    }
+
     @Override
     public String toString(){
         return "value:" + getValue() + ", X:" + getX() + ", Y:" + getY();

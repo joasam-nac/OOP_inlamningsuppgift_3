@@ -9,10 +9,6 @@ public class Grid {
     private final long seed;
     private final List<Tile> tiles = new ArrayList<>();
 
-    public Grid(int size) {
-        this(size, size, new Random().nextLong());
-    }
-
     public Grid(int width, int height) {
         this(width, height, new Random().nextLong());
     }
@@ -22,6 +18,14 @@ public class Grid {
         this.height = height;
         this.seed = seed;
         createTiles();
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+    public int getHeight(){
+        return height;
     }
 
     private void createTiles(){
@@ -58,7 +62,17 @@ public class Grid {
         return null;
     }
 
-    // den tomma rutan (tile med värde 0) är antingen 1 ifrån i x- eller y-led
+    public Tile findTileByPosition(int x, int y){
+        for (Tile t : tiles){
+            if (t.getX() == x && t.getY() == y){
+                return t;
+            }
+        }
+        return null;
+    }
+
+    /* den tomma rutan (tile med värde 0) är antingen 1
+    ifrån i x- eller y-led, men inte samtidigt*/
     public boolean canMoveTile(int value){
         Tile moveTile = findTileByValue(value);
         Tile emptyTile = findTileByValue(0);
@@ -83,5 +97,46 @@ public class Grid {
             emptyTile.setX(tempX);
             emptyTile.setY(tempY);
         }
+    }
+
+    public boolean playerHasWon(){
+        int compareVal = 1;
+        for (int i = 0; i < width * height; i++){
+            int x = i % width;
+            int y = i / width;
+            Tile tile = findTileByPosition(x, y);
+            if (tile.getValue() != compareVal){
+                return false;
+            }
+            if (compareVal == width * height - 1){
+                compareVal = 0;
+            } else {
+                compareVal++;
+            }
+        }
+        return true;
+    }
+
+    public static Grid demonstrationGrid(int width, int height){
+        Grid grid = new Grid(width, height);
+
+        //placerar ut på fixerad plats
+        for (int i = 1; i < width * height; i++){
+            Tile tile = grid.findTileByValue(i);
+            int x = (i - 1) % width;
+            int y = (i - 1) / width;
+            tile.setPosition(x, y);
+        }
+        Tile empty = grid.findTileByValue(0);
+        empty.setPosition(width - 1, height - 1);
+
+        // Gör så att man bara behöver flytta 1 ruta
+        Tile adjacent = grid.findTileByValue(width * height - 1);
+        int tempX = adjacent.getX();
+        int tempY = adjacent.getY();
+        adjacent.setPosition(empty.getX(), empty.getY());
+        empty.setPosition(tempX, tempY);
+
+        return grid;
     }
 }
